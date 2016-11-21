@@ -27,3 +27,5 @@ Na rys. 2. został przedstawiony przykładowy przebieg dochodzenia algorytmu sym
 
 
 ### Więcej na ― [`Sprawozdanie z etapu pierwszego`](https://docs.google.com/document/d/1WYCxnshAwNDnHHsAOg-h27Iu1ziimTfWvYYE1A3wL8E/edit?usp=sharing)
+
+### Sprawdź też [stronę wiki](https://github.com/mwolodzk/WHM-Problem-PB7/wiki) tego projektu.
