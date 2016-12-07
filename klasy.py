@@ -44,4 +44,62 @@ class grafWazony:
     def __losujWagiWierzcholka(self, _wierzcholek):
         "Losuje wagi dla wybranego wierzcholka."
     
+    def getWierzcholkiLewe(self):
+        "Zwraca listę obiektów klasy ,,Wierzchołek'' lewego podgrafu."
+        
+    class wierzcholekLewegoPodgrafu:
+        
+        """
+        Klasa składowa Grafu ważonego, która przechowuje część struktury problemu przydziału w grafie ważonym.
+
+        * ma swój numer porządkowy w grafie ważonym,,
+        * posiada listę wag do wszystkich wierzchołków z prawego podgrafu,
+        * potrafi zakomunikować swój numer porządkowy w grafie ważonym,
+        * potrafi podać dowolną wagę ze swojej listy wag,
+        """
+        
+        def __init__(self, _numerPorzadkowy, _listaWag):
+            # utworzenie wierzcholka z numerem porządkowym i
+            # ustaleniem wszystkich wag. Sprawdzenie czy 
+            # numerPorzadkowy to liczba naturalna większa od 0
+        
+        wagi = set()            # lista wag wszystkich krawędzi 
+        numerPorzadkowy = -1    # numer porządkowy wierzchołka
+        
+        def getNumerPorzadkowy(self):
+            "Zwraca numer porządkowy wierzchołka."
+            
+        def getWaga(self, numerWagi):
+            "Zwraca numer n-tej wagi wierzchołka lub zwraca błąd, że wagi nie ma."
+            
+            
+class rozwiazanyGrafWazony(grafWazony):
     
+    """
+    Klasa pochodna od Grafu ważonego. Reprezentuje dowolne rozwiązanie problemu przydziału w grafie ważonym.
+
+    * ma jedno rozwiązanie problemu przydziału w grafie ważonym,
+    * posiada obiekty klasy Krawędź grafu ważonego tworzących jendo rozwiązanie,
+    """
+    
+    def __init__(self):
+        # domyślnie stwarzam graf o domyślnej liczbie wierzchołków
+        # i losowych wagach oraz losowym rozwiązaniu.
+            
+    class krawedzGrafuWazonego:
+        
+        """
+        Klasa składowa Grafu ważonego, która stanowi element rozwiązania problemu przydziału w grafie ważonym.
+
+        * posiada numer wierzchołka lewego podgrafu, z którego wychodzi,
+        * ma numer wagi z listy obiektu klasy Wierzchołek lewego podgrafu, któremu odpowiada,
+        """
+        
+        def __init__(self, _numerWierzcholkaLewego, _numerWagi):
+            # ustalenie numeru wierzchołka z lewego podgrafu i 
+            # do którego wierzchołka w prawego podgrafu prowadzi
+            
+        numerWierzcholkaPrawego = -1   # numer porządkowy wierzchołka z prawego podgrafu,
+                                       # do którego krawędź się odnosi
+        numerWierzcholkaLewego = -1    # numer porządkowy wierzchołka z lewego podgrafu,
+                                       # do którego krawędź się odnosi
