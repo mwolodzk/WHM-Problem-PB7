@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from Tkinter import Tk
+from tkFileDialog import askopenfilename
 
 class grafWazony:
 
@@ -22,6 +24,7 @@ class grafWazony:
         # losowych wagach.
         
     liczbaLewychWierzcholkow = 20   # domyśla liczebność
+    wierzcholkiLewe = []            # lista wszystkich wierzchołków lewego podgrafu
     
     def __wczytajGrafZPliku(self, sciezka):
         """
@@ -37,6 +40,13 @@ class grafWazony:
         gdzie ln to n-ty wierzchołek z lewego podgrafu,
               pn to n-ty wierzchołek z prawego podgrafu.
         """
+        
+        Tk().withdraw()   # nie wyświetlaj pełnego GUI 
+        sciezkaPliku = askopenfilename()   # pokaż okienko wyboru pliku i zwróć wybraną ścieżkę
+        
+        plikZGrafemWazonym = open(sciezkaPliku)
+        if plikZGrafemWazonym.closed:
+            # Dopisać rzucany wyjątek
         
     def __generujGrafWazony(self, _liczbaLewychWierzcholkow):
         "Generacja grafu ważonego do problemu przydziału w grafie ważonym."
@@ -85,6 +95,19 @@ class rozwiazanyGrafWazony(grafWazony):
     def __init__(self):
         # domyślnie stwarzam graf o domyślnej liczbie wierzchołków
         # i losowych wagach oraz losowym rozwiązaniu.
+        
+    def __init__(self, _liczbaLewychWierzcholkow):
+        # konstruktor grafu o podanej liczbie wierzchołków i
+        # losowych wagach.
+        
+    krawedzie = [];   # lista wszystkich krawędzi rozwiązanego problemu przydziału
+                      # w grafie ważonym
+        
+    def __generujRozwiazanie(self):
+        "Utworzenie jednego poprawnego rozwiązania problemu przydziału w grafie ważonym."
+        
+    def getKrawedzie(self):
+        "Zwraca listę krawędzi rozwiązanego problemu przydziału w grafie ważonym."
             
     class krawedzGrafuWazonego:
         
@@ -103,3 +126,4 @@ class rozwiazanyGrafWazony(grafWazony):
                                        # do którego krawędź się odnosi
         numerWierzcholkaLewego = -1    # numer porządkowy wierzchołka z lewego podgrafu,
                                        # do którego krawędź się odnosi
+            
