@@ -97,4 +97,70 @@ class doswiadczenie:
         decyzjaOWczytaniu = self._czyWczytacGrafZPliku()
         return graf.rozwiazanyGrafWazony(liczbaWierzcholkow, decyzjaOWczytaniu)
         
+class analizatorWynikow:
+
+    """
+    Umożliwia badanie i porównywanie rozwiązań problemu PB7 oraz badanie algorytmu symulowanego wyżarzania. 
+    Wykonaną analizę przedstawia graficznie wizualizator wyników.
+
+    * oblicza złożoność obliczeniową algorytmu symulowanego wyżarzania,
+    * bada efektywność algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania,
+    * zapamiętuje rozwiązania uzyskane z algorytmu symulowanego wyżarzania,
+    * zapamiętuje wyniki działania algorytmu symulowanego wyżarzania,
+    * porównuje różne algorytmy schładzania,
+    
+    """
+    
+    def __init__(self):
+        "Konstruktor Analizatora Wyników."
         
+    def analizuj(self):
+        """
+        Dokonuje analizy zastosowania symulowanego wyżarzania do rozwiązywania problemu przydziału w 
+        grafie ważonym. 
+        """
+        
+    def _badajEfektywnoscAlgorytmu(self):
+        "Zbadanie efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania."
+        
+    def _obliczZlozonoscObliczeniowa(self):
+        "Oblicza zlozonosc obliczeniową algorytmu symulowanego wyżarzania."
+        
+    def _zapamietajRozwiazanie(self):
+        "Zapamiętuje rozwiązanie uzyskane z algorytmu symulotwanego wyżarzania."
+        
+    def _porownajAlgorytmySchladzania(self, algorytm1, algorytm2):
+        "Porównuje podane algorytmy schładzania ..."
+        
+    def _przedstawGraficznie(self):
+        "Przedstawienie graficzne wyników analizy."
+        
+        
+    class wizualizatorWynikow:
+    
+        """
+        Nakładka na analizatora wyników, która umożliwia przedstawienie graficznie wyników
+        działania algorytmu symulowanego wyżarzania i uzyskanych z jego pomocą rozwiązań problemu PB7.
+
+        * przedstawia graficznie proces dochodzenia algorytmu do rozwiązania,
+        * tworzy wykresy złożoności obliczeniowej algorytmu w zależności od jego parametrów.
+        
+        """
+    
+        def __init__(self):
+            "Konstruktor Wizualizatora Wyników."
+            
+        def _rysujWykresZlozonosciObliczeniowej(self):
+            "Rysuje wykres złożoności obliczeniowej algorytmu symulowanego wyżarzania w zależności od jego parametrów."
+            
+        def _rysujWykresT(self):
+            "Rysuje wykres efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru temperatury wyżarzania."
+            
+        def _rysujPorownanie(self):
+            "Przedstawia graficznie porównanie różnych algorytmów schładzania."
+            
+        def _rysujDochodzenieDoRozwiazania(self):
+            "Wizualizacja przebiegu dochodzenia algorytmu do rozwiązania."
+        
+    
+    
