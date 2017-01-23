@@ -41,7 +41,7 @@ class grafWazony:
     
     _ziarno = 576                  # ziarno dla generatora liczb losowych
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
         # konstruktor grafu o podanej liczbie wierzchołków i 
         # wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
@@ -53,7 +53,7 @@ class grafWazony:
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == "nie":
+        if wczytacPlik == False:
             self._generujGrafWazony()
         else:
             self._wczytajGrafZPliku()
@@ -201,7 +201,7 @@ class rozwiazanyGrafWazony(grafWazony):
     * obliczKosztRozwiazania(self) ― Oblicza koszt obecnego rozwiązania
     """
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
         # konstruktor rozwiązanego problemu przydziału w grafie  
         # o podanej liczbie wierzchołków i wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
@@ -215,7 +215,7 @@ class rozwiazanyGrafWazony(grafWazony):
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == "nie":
+        if wczytacPlik == False:
             self._generujGrafWazony()
         else:
             self._wczytajGrafZPliku()
