@@ -13,6 +13,7 @@ import klasyGrafuWazonego as graf
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy import log
+from operator import truediv
 
 class doswiadczenie:
 
@@ -57,7 +58,7 @@ class doswiadczenie:
             'wersjaAlgorytmu': self.wersjaAlgorytmu,
             'iloscWierzcholkowLewych': self.iloscWierzcholkowLewych,
             'iloscWierzcholkowPrawych': self.iloscWierzcholkowPrawych,
-            'zakresWag': zakresWag,
+            'zakresWag': self.zakresWag,
             }
         
     def _czyWczytacGrafZPliku(self):
@@ -65,10 +66,10 @@ class doswiadczenie:
         decyzja = str(raw_input("Czy wczytać strukturę grafu ważonego z pliku: "))
         if decyzja == "tak" or decyzja == "t":
             return True
-        else
+        else:
             return False
     
-    def T(self, schemat = self.schematSchladzania):
+    def T(self, schemat):
         """
         Zmienia obecną temperaturę zgodnie z wybranym schematem schładzania. Ustala parametry schematów schładzania.
         Akceptowane schematy schładzania to --
@@ -137,11 +138,10 @@ class analizatorWynikow:
     
     """
     
-    def __init__(self, parametryDoswiadczenia, daneZSymulatora = None):
+    def __init__(self, parametryDoswiadczenia):
         """
         Konstruktor Analizatora Wyników. Otrzymuje
          * parametryDoswiadczenia – słownik (dictionary) zawierający parametry doświadczenia
-         * daneZSymulatora – ...
         """
         # Warto od razu pobrać dane doświadczenia od sterownika doświadczeniem – klasa doswiadczenie
         self.parametryDoswiadczenia = parametryDoswiadczenia
@@ -151,29 +151,130 @@ class analizatorWynikow:
         self.iloscWierzcholkowPrawych = parametryDoswiadczenia['iloscWierzcholkowPrawych']
         self.zakresWag = parametryDoswiadczenia['zakresWag']
         
-    def analizuj(self):
+        self.daneDoswiadczenia = [] # lista słowników zawierających dane z kolejnego doświadczenia
+        self.wyniki = []            # lista słowników zawierających wyniki analizy podanych doświadczeń
+        
+    def analizuj(self, daneZSymulatora):
         """
         Dokonuje analizy zastosowania symulowanego wyżarzania do rozwiązywania problemu przydziału w 
         grafie ważonym. 
         """
-        # Tutaj pojawi się kod całej analizy. Warto wykorzystać funkcje składowe klasy.
+        # pobranie danych z symulatora
+        self.dane.append(daneZSymulatora)
         
-        # Graficzna reprezentacja analizy
-        self._przedstawGraficznie()
+        # analiza danych
+        wynikiAnalizy = {}
+        wynikiAnalizy['efektywnoscAlgorytmu'] = self._badajEfektywnoscAlgorytmu(self.dane)
+        wynikiAnalizy['zlozonosc'] = self._obliczZlozonoscObliczeniowa(self.dane)
+        wynikiAnalizy['zlozonoscCzasowa'] = wynikiAnalizy['zlozonosc'][0]
+        wynikiAnalizy['zlozonoscPamieciowa'] = wynikiAnalizy['zlozonosc'][1]
+        wynikiAnalizy['porownanieSchematow'] = self._porownajSchematySchladzania(self.dane)
         
-    def _badajEfektywnoscAlgorytmu(self):
-        "Zbadanie efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania."
+        # zapisanie wyników danych
+        self.wyniki.append(wynikiAnalizy)
         
-    def _obliczZlozonoscObliczeniowa(self):
-        "Oblicza zlozonosc obliczeniową algorytmu symulowanego wyżarzania."
+        # graficzna reprezentacja analizy
+        self.wizualizatorWynikow(self.dane[0],"Rozw")    # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
+        self.wizualizatorWynikow(wynikiAnalizy)          # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
+        #self._przedstawGraficznie(self.wyniki)
         
-    def _zapamietajRozwiazanie(self):
-        "Zapamiętuje rozwiązanie uzyskane z algorytmu symulotwanego wyżarzania."
+    def _badajEfektywnoscAlgorytmu(self, daneZDoswiadczen):
+        """
+        Zbadanie efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania i różnych temperatur.
+        Potrzebuje:
+         * oceny optymalnych rozwiązań dla różnych zakresów parametru wyżarzania,
+         * ilość iteracji algorytmu potrzebna do osiągnięcia optymalnego rozwiązania dla przebadanych
+           wartości zakresu temperatur przeprowadzonego algorytmu,
+         * wartości parametru wyżarzania, dla których obliczone były funkcje oceny
+        Zwraca wiązkę o postaci
+        ( efektywnoscTemperaturowa, efektywnoscParametryczna ), co się przekłada na
+        ( (średnia ocena na T, T) , (średnia ocena na parametr wyżarzania, parametr) )
+        ( ([f1,f2,...],[T1,T2,...] , ([f1,f2,...],[a1,a2,...]) )
+        """
+        # uporządkowanie danych
+        fEmin = []; iteracje = []; T = []; a = []
+        for daneDoswiadczenia in daneZDoswiadczen:
+            fEmin.append(daneDoswiadczenia['fEmin'])
+            iteracje.append(daneDoswiadczenia['iteracje'])
+            a.append(daneDoswiadczenia['a'])
+            T.append(daneDoswiadczenia['Tmax'])
         
-    def _porownajAlgorytmySchladzania(self, algorytm1, algorytm2):
-        "Porównuje podane algorytmy schładzania ..."
+        # obliczenie efektywności
+        fEminNaT = map(truediv, fEmin, T)
+        fEminNaA = map(truediv, fEmin, a)
         
-    def _przedstawGraficznie(self):
+        efektywnoscTemperaturowa = (fEminNaT, T)
+        efektywnoscParametryczna = (fEminNaA, a)
+        
+        # zwrócenie wartości    
+        efektywnoscAlgorytmu = (efektywnoscTemperaturowa, efektywnoscParametryczna)
+        return efektywnoscAlgorytmu       
+        
+    def _obliczZlozonoscObliczeniowa(self, daneZDoswiadczen):
+        """
+        Oblicza złozonosc obliczeniową algorytmu symulowanego wyżarzania.
+        Potrzebuje:
+         * ilość iteracji algorytmu symulowanego wyżarzania potrzebna do osiągnięcia
+           optymalnego rozwiązania,
+         * ilość czasu wykonywania algorytmu symulowanego wyżarzania,
+         * ilość rozwiązań pośrednich przed uzyskaniem rozwiązania optymalnego.
+        Obliczana jest złożoność czasowa i pamięciowa algorytmu.
+        Zwraca wiązkę o postaci
+        ( (złożoność czasowa), (złożoność pamięciowa) ), co się przekłada na
+        ( ([t1,t2,...], [it1,it2,...]), ([pos1,pos2,...],[it1,it2,...]) )
+        """
+        # uporządkowanie danych
+        iteracje = []; t = []; iloscPosrednich = []
+        for daneDoswiadczenia in daneZDoswiadczen:
+            iteracje.append(daneDoswiadczenia['iteracje'])
+            t.append(daneDoswiadczenia['t'])
+            iloscPosrednich.append(daneDoswiadczenia['iloscPosrednich'])
+            
+        # obliczenie złożoności
+        czasNaIteracje = map(truediv, t, iteracje)
+        rozwiazaniaNaIteracje = map(truediv, iloscPosrednich, iteracje)
+        
+        # zwrócenie złożoności
+        zlozonoscCzasowa = (czasNaIteracje, iteracje)
+        zlozonoscPamieciowa = (rozwiazaniaNaIteracje, iteracje)
+        zlozonosc = (zlozonoscCzasowa, zlozonoscPamieciowa)
+        return zlozonosc
+        
+#    def _zapamietajRozwiazanie(self, daneZDoswiadczenia):
+#        "Zapamiętuje rozwiązanie i koszty uzyskania rozwiązania z algorytmu symulowanego wyżarzania."
+        
+        
+    def _porownajSchematySchladzania(self, daneZDoswiadczen):
+        """
+        Porównuje zastosowane schematy schładzania.
+        Zwraca wiązkę o postaci:
+        (
+         [fE min. średnie Boltzmann, fE min. Liniowy, fE min. Geometryczny],
+         [średnie iteracje Boltzmann, ś. iteracje Liniowy, ś. iteracje Geometryczny],
+         [ilość schematów Boltzmanna, # Liniowych, # Geometrycznych]
+        )
+        """
+        # uporządkowanie danych
+        schematy = [0,0,0]; fEmin = [0,0,0]; iteracje = [0,0,0]; 
+        for daneDoswiadczenia in daneZDoswiadczen:
+            schemat = daneDoswiadczenia['schemat']
+            ktory = 0 if schemat == 'Boltzmanna' or schemat == 'Logarytmiczny' else -1
+            ktory = 1 if schemat == "Cauchy'ego" or schemat == 'Liniowy' else -1
+            ktory = 2 if schemat == 'Geometryczny' else -1
+            if ktory == -1:
+                raise ValueError, "Podana niepoprawna nazwa schematu schładzania – " + str(schemat)
+            schematy[ktory] += 1
+            fEmin[ktory] += daneDoswiadczenia['fEmin']
+            iteracje[ktory] += daneDoswiadczenia['iteracje']
+        
+        # obliczenie wartości miarodajnych
+        fEminAvg = map(truediv, fEmin, schematy)
+        iteracjeAvg = map(truediv, iteracje, schematy)
+        porownanie = (fEminAvg, iteracjeAvg, schematy)
+        
+        return porownanie
+        
+    def _przedstawGraficznie(self, dane):
         "Przedstawienie graficzne wyników analizy."
         self.wizualizatorWynikow(dane,"Rozw")   # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
         self.wizualizatorWynikow(dane)          # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
@@ -199,6 +300,8 @@ class analizatorWynikow:
              * A(J,NJ) -- graficzne porównanie algorytmów schładzania – jednorodnego (J) i niejednorodnego (NJ).
              * Sch -- graficzna analiza różnych sposobów aktualizacji temperatury (schematów schładzania).
              * Rozw -- wizualizacja przebiegu dochodzenia algorytmu do rozwiązania.
+            Dane potrzebne do rysowania wykresów:
+             * ilość
             """
             self.wykresy = wykresy
             self.dane = dane
@@ -206,7 +309,7 @@ class analizatorWynikow:
             if self.wykresy == None:
                 plt.figure(); _rysujWykresZlozonosciObliczeniowej()
                 plt.figure(); _rysujWykresT()
-                plt.figure(); _rysujPorownanieAlgorytmow()
+                # plt.figure(); _rysujPorownanieAlgorytmow()
                 plt.figure(); _rysujPorownanieSchematowSchladzania()
             if "O(n)" in self.wykresy:
                 plt.figure(); _rysujWykresZlozonosciObliczeniowej()
@@ -223,36 +326,50 @@ class analizatorWynikow:
             
         def _rysujWykresZlozonosciObliczeniowej(self):
             "Rysuje wykres złożoności obliczeniowej O(n) algorytmu symulowanego wyżarzania w zależności od jego parametrów."
-            iloscIteracji = self.dane... # wstawić ilość iteracji algorytmu ze struktury ,,dane''
-            zlozonosc = self.dane...     # tutaj trzeba wstawić odpowiednie pole ze sruktury ,,dane''
+            # Przyjąłem format danych: 
+            # ( (złożoność czasowa), (złożoność pamięciowa) ), co się przekłada na
+            # ( ([t1,t2,...], [it1,it2,...]), ([pos1,pos2,...],[it1,it2,...]) )
+            zlozonoscCzasowa = self.dane['zlozonoscCzasowa']
+            zlozonoscPamieciowa = self.dane['zlozonoscPamieciowa']
             
-            n = np.arange(0, iloscKrokow, 1) # zmienna OX
-            O = np.asarray(zlozonosc)        # zamiana na typ array, poręczny do rysowania wykresów, oś OY
+            nt = np.asarray(zlozonoscCzasowa[0][1])
+            Ot = np.asarray(zlozonoscCzasowa[0][0])
             
-            plt.plot(n,O)                    # rysowanie wykresu 
+            nm = np.asarray(zlozonoscPamieciowa[1][1])
+            Om = np.asarray(zlozonoscPamieciowa[1][0])
             
             plt.title('Złożoność obliczeniowa O(n)')
-            plt.ylabel('O(n)')
-            plt.xlabel('n')
+            plt.subplot(211)
+            plt.plot(nt,Ot)                    # rysowanie wykresu 
+            plt.ylabel('Średni czas na iterację.')
+            plt.xlabel('Ilość iteracji')
+            
+            plt.subplot(221)
+            plt.plot(nm,Om)
+            plt.ylabel('Średnia ilość rozwiązań na iterację.')
+            plt.xlabel('Ilość iteracji')
             
         def _rysujWykresT(self):
             "Rysuje wykres efektywności algorytmu E(T) w znajdowaniu optimum dla różnych zakresów parametru temperatury wyżarzania."
-            T = self.dane...    # wstawić zakresy temperatur z pola struktury ,,dane''
-            E = self.dane...    # wstawić efektywności algorytmu z pola struktury ,,dane''
+            # Przyjąłem dane w formacie
+            # ( efektywnoscTemperaturowa, efektywnoscParametryczna ), co się przekłada na
+            # ( (średnia ocena na T, T) , (średnia ocena na parametr wyżarzania, parametr) )
+            # ( ([f1,f2,...],[T1,T2,...] , ([f1,f2,...],[a1,a2,...]) )
+            efektywnoscParametryczna = self.dane['efektywnoscAlgorytmu'][1]
             
-            T = np.asarray(T)   # zamiana na typ array, oś OX
-            E = np.asarray(E)   # zamiana na typ array, oś OY
+            a = np.asarray(efektywnoscParametryczna[1])    # zamiana na typ array, oś OX
+            fE = np.asarray(efektywnoscParametryczna[0])   # zamiana na typ array, oś OY
             
-            plt.plot(T,E)       # rysowanie wykresu
+            plt.plot(a,fE)       # rysowanie wykresu
             
-            plt.title('Efektywność algorytmu w zależności od temperatury')
-            plt.ylabel('Efektywność')
-            plt.xlabel('T')
+            plt.title('Efektywność algorytmu w zależności od parametru wyżarzania')
+            plt.ylabel('Średnia ocena na parametr')
+            plt.xlabel('Parametr wyżarzania')
                       
         def _rysujPorownanieAlgorytmow(self):
             "Przedstawia graficznie porównanie algorytmów schładzania – jednorodnego (J) i niejednorodnego (NJ)."
-            J = self.dane...    # wstawić dane o efektywności algorytmu jednorodnego z pola struktury ,,dane''
-            NJ = self.dane...   # wstawić dane o efektywności algorytmu niejednorodnego z pola struktury ,,dane''
+            J = self.dane['nazwaKlucza']    # wstawić dane o efektywności algorytmu jednorodnego z pola struktury ,,dane''
+            NJ = self.dane['nazwaKlucza']   # wstawić dane o efektywności algorytmu niejednorodnego z pola struktury ,,dane''
             
             ind = (0,1)              # indeksy algorytmów, 0 – jednorodny, 1 – niejednorodny
             Y = (J,NJ)               # oś OY
@@ -265,22 +382,40 @@ class analizatorWynikow:
             
         def _rysujPorownanieSchematowSchladzania(self):
             "Przedstawia graficznie analizę różnych sposobów aktualizacji temperatury (schematów schładzania)."
-            schematy = self.dane...    # wstawić przebadane schematy schładzania z pola struktury ,,dane''
-            E = self.dane...            # wstawić dane o efektywności schematów schładzania z pola struktury ,,dane''
-            
-            ind = np.arange(len(schematy)) # indeksy schematów schładzania
-            E = np.asarray(E)               # efektywności kolejnych algorytmów
-            
-            plt.bar(ind,E)
+            # Przyjąłem dane w formacie
+            #(
+            # [fE min. średnie Boltzmann, fE min. Liniowy, fE min. Geometryczny],
+            # [średnie iteracje Boltzmann, ś. iteracje Liniowy, ś. iteracje Geometryczny],
+            # [ilość schematów Boltzmanna, # Liniowych, # Geometrycznych]
+            #)
+            porownanie = self.dane['porownanieSchematow']
+            fE = porownanie[0]
+            it = porownanie[1]
+            N = porownanie[2]
+            ind = range(3)
             
             plt.title('Efektywność schematów schładzania')
-            plt.ylabel('Efektywność')
-            plt.xticks(ind, schematy)      # zakładam, że zmienna ,,algorytmy'' to lista lub wiązka z nazwami schematów schładzania
+            subplot(311)
+            plt.bar(ind,fE)
+            plt.ylabel('Średnia ocena na ilość zastosowanych schematów')
+            plt.xticks(ind, ('Boltzmanna', 'Liniowy', 'Geometryczny'))
+            
+            subplot(312)
+            plt.bar(ind,it)
+            plt.ylabel('Średnia ilość iteracji na ilość zastosowanych schematów')
+            plt.xticks(ind, ('Boltzmanna', 'Liniowy', 'Geometryczny'))
+            
+            subplot(313)
+            plt.bar(ind,N)
+            plt.ylabel('Ilość zastosowanych schematów')
+            plt.xticks(ind, ('Boltzmanna', 'Liniowy', 'Geometryczny'))
             
         def _rysujDochodzenieDoRozwiazania(self):
             "Wizualizacja przebiegu dochodzenia algorytmu do rozwiązania."
-            iloscIteracji = self.dane...    # wstawić ilość iteracji wykonanych przez algorytm
-            fE = self.dane...               # wstawić funkcję oceny rozwiązania ze struktury ,,dane''
+            # Przyjąłem dane jako słownik zawierający wiązkę z liczbą iteracji 
+            # i funkcją oceny dla poszczególnych iteracji algorytmu
+            iloscIteracji = self.dane['iteracje']    # wstawić ilość iteracji wykonanych przez algorytm
+            fE = self.dane['fE']                     # wstawić funkcję oceny rozwiązania ze struktury ,,dane''
             
             x = np.arange(iloscIteracji)    # oś OX
             y = np.asarray(fE)              # oś OY
