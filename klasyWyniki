@@ -1,0 +1,195 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""
+Klasy służące do rozwiązania problemu przydziału w grafie ważonym
+z zastosowaniem symulowanego wyżarzania
+Klasy zawarte w pliku ―
+ * doswiadczenie,
+ * analizator_wynikow,
+  * wizualizator_wynikow,
+"""
+
+import klasyGrafuWazonego as graf
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy import log
+
+
+
+class analizatorWynikow:
+    """
+    Umożliwia badanie i porównywanie rozwiązań problemu PB7 oraz badanie algorytmu symulowanego wyżarzania.
+    Wykonaną analizę przedstawia graficznie wizualizator wyników.
+
+    * oblicza złożoność obliczeniową algorytmu symulowanego wyżarzania,
+    * bada efektywność algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania,
+    * zapamiętuje rozwiązania uzyskane z algorytmu symulowanego wyżarzania,
+    * zapamiętuje wyniki działania algorytmu symulowanego wyżarzania,
+    * porównuje różne algorytmy schładzania,
+
+    """
+
+    def __init__(self, parametryDoswiadczenia, daneZSymulatora=None):
+        """
+        Konstruktor Analizatora Wyników. Otrzymuje
+         * parametryDoswiadczenia – słownik (dictionary) zawierający parametry doświadczenia
+         * daneZSymulatora – ...
+        """
+        # Warto od razu pobrać dane doświadczenia od sterownika doświadczeniem – klasa doswiadczenie
+        self.parametryDoswiadczenia = parametryDoswiadczenia
+        self.temperaturaPoczatkowa = parametryDoswiadczenia['temperaturaPoczatkowa']
+        self.temperaturaKoncowa = parametryDoswiadczenia['temperaturaKoncowa']
+        self.iloscWierzcholkowLewych = parametryDoswiadczenia['iloscWierzcholkowLewych']
+        self.iloscWierzcholkowPrawych = parametryDoswiadczenia['iloscWierzcholkowPrawych']
+        self.zakresWag = parametryDoswiadczenia['zakresWag']
+
+    def analizuj(self):
+        """
+        Dokonuje analizy zastosowania symulowanego wyżarzania do rozwiązywania problemu przydziału w
+        grafie ważonym.
+        """
+        # Tutaj pojawi się kod całej analizy. Warto wykorzystać funkcje składowe klasy.
+
+        # Graficzna reprezentacja analizy
+        self._przedstawGraficznie()
+
+    def _badajEfektywnoscAlgorytmu(self):
+        "Zbadanie efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru wyżarzania."
+
+    def _obliczZlozonoscObliczeniowa(self):
+        "Oblicza zlozonosc obliczeniową algorytmu symulowanego wyżarzania."
+
+    def _zapamietajRozwiazanie(self):
+        "Zapamiętuje rozwiązanie uzyskane z algorytmu symulotwanego wyżarzania."
+
+    def _porownajAlgorytmySchladzania(self, algorytm1, algorytm2):
+        "Porównuje podane algorytmy schładzania ..."
+
+    def _przedstawGraficznie(self):
+        "Przedstawienie graficzne wyników analizy."
+        self.wizualizatorWynikow(dane,
+                                 "Rozw")  # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
+        self.wizualizatorWynikow(dane)  # ,,dane'' przesłane w dowolnej formie, dostosuj kod klasy wizualizatorWynikow
+
+    class wizualizatorWynikow:
+
+        """
+        Nakładka na analizatora wyników, która umożliwia przedstawienie graficznie wyników
+        działania algorytmu symulowanego wyżarzania i uzyskanych z jego pomocą rozwiązań problemu PB7.
+
+        * przedstawia graficznie proces dochodzenia algorytmu do rozwiązania,
+        * tworzy wykresy złożoności obliczeniowej algorytmu w zależności od jego parametrów.
+
+        """
+
+        def __init__(self, dane, wykresy=None):
+            """
+            Konstruktor Wizualizatora Wyników. Przyjmuję, że domyślnie wszystkie wykresy analityczne są rysowane.
+            Wykresy powinny być przekazane w formie wiązki (tuple). Dostępne wykresy to
+             * O(n) -- wykres złożoności obliczeniowej algorytmu symulowanego wyżarzania w zależności od jego parametrów,
+             * E(T) -- wykres efektywności algorytmu w znajdowaniu optimum dla różnych zakresów parametru temperatury wyżarzania.
+             * A(J,NJ) -- graficzne porównanie algorytmów schładzania – jednorodnego (J) i niejednorodnego (NJ).
+             * Sch -- graficzna analiza różnych sposobów aktualizacji temperatury (schematów schładzania).
+             * Rozw -- wizualizacja przebiegu dochodzenia algorytmu do rozwiązania.
+            """
+            self.wykresy = wykresy
+            self.dane = dane
+
+            if self.wykresy == None:
+                plt.figure();
+                _rysujWykresZlozonosciObliczeniowej()
+                plt.figure();
+                _rysujWykresT()
+                plt.figure();
+                _rysujPorownanieAlgorytmow()
+                plt.figure();
+                _rysujPorownanieSchematowSchladzania()
+            if "O(n)" in self.wykresy:
+                plt.figure();
+                _rysujWykresZlozonosciObliczeniowej()
+            if "E(T)" in self.wykresy:
+                plt.figure();
+                _rysujWykresT()
+            if "A(J,NJ)" in self.wykresy:
+                plt.figure();
+                _rysujPorownanieAlgorytmow()
+            if "Sch" in self.wykresy:
+                plt.figure();
+                _rysujPorownanieSchematowSchladzania()
+            if "Rozw" in self.wykresy:
+                plt.figure();
+                _rysujDochodzenieDoRozwiazania()
+
+            show()
+
+        def _rysujWykresZlozonosciObliczeniowej(self):
+            "Rysuje wykres złożoności obliczeniowej O(n) algorytmu symulowanego wyżarzania w zależności od jego parametrów."
+
+            iloscIteracji = self.dane...  # wstawić ilość iteracji algorytmu ze struktury ,,dane''
+            zlozonosc = self.dane...  # tutaj trzeba wstawić odpowiednie pole ze sruktury ,,dane''
+
+            n = np.arange(0, iloscKrokow, 1)  # zmienna OX
+            O = np.asarray(zlozonosc)  # zamiana na typ array, poręczny do rysowania wykresów, oś OY
+
+            plt.plot(n, O)  # rysowanie wykresu
+
+            plt.title('Złożoność obliczeniowa O(n)')
+            plt.ylabel('O(n)')
+            plt.xlabel('n')
+
+        def _rysujWykresT(self):
+            "Rysuje wykres efektywności algorytmu E(T) w znajdowaniu optimum dla różnych zakresów parametru temperatury wyżarzania."
+            T = self.dane...  # wstawić zakresy temperatur z pola struktury ,,dane''
+            E = self.dane...  # wstawić efektywności algorytmu z pola struktury ,,dane''
+
+            T = np.asarray(T)  # zamiana na typ array, oś OX
+            E = np.asarray(E)  # zamiana na typ array, oś OY
+
+            plt.plot(T, E)  # rysowanie wykresu
+
+            plt.title('Efektywność algorytmu w zależności od temperatury')
+            plt.ylabel('Efektywność')
+            plt.xlabel('T')
+
+        def _rysujPorownanieAlgorytmow(self):
+            "Przedstawia graficznie porównanie algorytmów schładzania – jednorodnego (J) i niejednorodnego (NJ)."
+            J = self.dane...  # wstawić dane o efektywności algorytmu jednorodnego z pola struktury ,,dane''
+            NJ = self.dane...  # wstawić dane o efektywności algorytmu niejednorodnego z pola struktury ,,dane''
+
+            ind = (0, 1)  # indeksy algorytmów, 0 – jednorodny, 1 – niejednorodny
+            Y = (J, NJ)  # oś OY
+
+            plt.bar(ind, Y)
+
+            plt.title('Schładzanie jednorodne (J) i niejednorodne (NJ)')
+            plt.ylabel('Efektywność')
+            plt.xticks(ind, ('jednorodne', 'niejednorodne'))
+
+        def _rysujPorownanieSchematowSchladzania(self):
+            "Przedstawia graficznie analizę różnych sposobów aktualizacji temperatury (schematów schładzania)."
+            schematy = self.dane...  # wstawić przebadane schematy schładzania z pola struktury ,,dane''
+            E = self.dane...  # wstawić dane o efektywności schematów schładzania z pola struktury ,,dane''
+
+            ind = np.arange(len(schematy))  # indeksy schematów schładzania
+            E = np.asarray(E)  # efektywności kolejnych algorytmów
+
+            plt.bar(ind, E)
+
+            plt.title('Efektywność schematów schładzania')
+            plt.ylabel('Efektywność')
+            plt.xticks(ind,
+                       schematy)  # zakładam, że zmienna ,,algorytmy'' to lista lub wiązka z nazwami schematów schładzania
+
+        def _rysujDochodzenieDoRozwiazania(self):
+            "Wizualizacja przebiegu dochodzenia algorytmu do rozwiązania."
+            iloscIteracji = self.dane...  # wstawić ilość iteracji wykonanych przez algorytm
+            fE = self.dane...  # wstawić funkcję oceny rozwiązania ze struktury ,,dane''
+
+            x = np.arange(iloscIteracji)  # oś OX
+            y = np.asarray(fE)  # oś OY
+
+            plt.plot(x, y)  # rysowanie wykresu
+
+            plt.title('Dochodzenie algorytmu do rozwiązania')
+            plt.ylabel('Funkcja oceny')
+            plt.xlabel('Iteracja')

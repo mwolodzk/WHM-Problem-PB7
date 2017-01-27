@@ -41,11 +41,12 @@ class grafWazony:
     
     _ziarno = 576                  # ziarno dla generatora liczb losowych
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
         # konstruktor grafu o podanej liczbie wierzchołków i 
         # wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
         seed(grafWazony._ziarno)       # ustawienie ziarna przy wywołaniu konstruktora klasy
+        self.sciezkaPlikuZGrafem = "/home/michal/Pobrane/googledrive backup ― 29 may 2016/Politechnika/Studia doktorskie/Sem. IV/WHM/Projekt/Etap III/WHM-Problem-PB7/przykladowyGrafWazony.txt"
         
         if liczbaWierzcholkow%2 == 0:
             self.liczbaLewychWierzcholkow = liczbaWierzcholkow/2
@@ -53,10 +54,10 @@ class grafWazony:
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == False:
+        if wczytacPlik == "nie":
             self._generujGrafWazony()
         else:
-            self._wczytajGrafZPliku()
+            self._wczytajGrafZPliku(self.sciezkaPlikuZGrafem)
     
     def strukturaPlikuZGrafemWazonym(self):
         print """
@@ -73,7 +74,7 @@ class grafWazony:
               pn to n-ty wierzchołek z prawego podgrafu.
         """
     
-    def _wczytajGrafZPliku(self):
+    def _wczytajGrafZPliku(self,sciezkaPliku=None):
         """
         Wczytanie grafu ważonego z pliku o strukturze --
         
@@ -88,7 +89,10 @@ class grafWazony:
               pn to n-ty wierzchołek z prawego podgrafu.
         """        
         Tk().withdraw()   # nie wyświetlaj pełnego GUI 
-        sciezkaPliku = askopenfilename()   # pokaż okienko wyboru pliku i zwróć wybraną ścieżkę
+        if sciezkaPliku == None:
+            sciezkaPliku = askopenfilename()   # pokaż okienko wyboru pliku i zwróć wybraną ścieżkę
+        else:
+            sciezkaPliku = "/home/michal/Pobrane/googledrive backup ― 29 may 2016/Politechnika/Studia doktorskie/Sem. IV/WHM/Projekt/Etap III/WHM-Problem-PB7/przykladowyGrafWazony.txt"
         
         with open(sciezkaPliku) as plikZGrafemWazonym:
             self.liczbaLewychWierzcholkow = int(plikZGrafemWazonym.readline())
@@ -201,7 +205,7 @@ class rozwiazanyGrafWazony(grafWazony):
     * obliczKosztRozwiazania(self) ― Oblicza koszt obecnego rozwiązania
     """
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
         # konstruktor rozwiązanego problemu przydziału w grafie  
         # o podanej liczbie wierzchołków i wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
@@ -215,7 +219,7 @@ class rozwiazanyGrafWazony(grafWazony):
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == False:
+        if wczytacPlik == "nie":
             self._generujGrafWazony()
         else:
             self._wczytajGrafZPliku()

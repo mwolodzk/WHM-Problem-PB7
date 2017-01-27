@@ -9,7 +9,7 @@ import klasyGrafuWazonego
 def testujTworzenieRozwiazanegoGrafuWazonego():
     
     badanaKlasa = klasyGrafuWazonego.rozwiazanyGrafWazony()
-    print "Typ badanej klasy to ― " + str(badanaKlasa)
+    print "Typ badanej klasy to: " + str(badanaKlasa)
     
     print "Ilość lewych wierzchołków wynosi " + str(badanaKlasa.liczbaLewychWierzcholkow)
     print "Ilość prawych wierzchołków wynosi " + str(badanaKlasa.liczbaPrawychWierzcholkow)
