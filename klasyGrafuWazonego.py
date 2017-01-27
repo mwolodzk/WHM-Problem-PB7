@@ -41,12 +41,11 @@ class grafWazony:
     
     _ziarno = 576                  # ziarno dla generatora liczb losowych
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
         # konstruktor grafu o podanej liczbie wierzchołków i 
         # wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
         seed(grafWazony._ziarno)       # ustawienie ziarna przy wywołaniu konstruktora klasy
-        self.sciezkaPlikuZGrafem = "/home/michal/Pobrane/googledrive backup ― 29 may 2016/Politechnika/Studia doktorskie/Sem. IV/WHM/Projekt/Etap III/WHM-Problem-PB7/przykladowyGrafWazony.txt"
         
         if liczbaWierzcholkow%2 == 0:
             self.liczbaLewychWierzcholkow = liczbaWierzcholkow/2
@@ -54,10 +53,10 @@ class grafWazony:
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == "nie":
+        if wczytacPlik == False:
             self._generujGrafWazony()
         else:
-            self._wczytajGrafZPliku(self.sciezkaPlikuZGrafem)
+            self._wczytajGrafZPliku()
     
     def strukturaPlikuZGrafemWazonym(self):
         print """
@@ -74,7 +73,7 @@ class grafWazony:
               pn to n-ty wierzchołek z prawego podgrafu.
         """
     
-    def _wczytajGrafZPliku(self,sciezkaPliku=None):
+    def _wczytajGrafZPliku(self):
         """
         Wczytanie grafu ważonego z pliku o strukturze --
         
@@ -89,10 +88,7 @@ class grafWazony:
               pn to n-ty wierzchołek z prawego podgrafu.
         """        
         Tk().withdraw()   # nie wyświetlaj pełnego GUI 
-        if sciezkaPliku == None:
-            sciezkaPliku = askopenfilename()   # pokaż okienko wyboru pliku i zwróć wybraną ścieżkę
-        else:
-            sciezkaPliku = "/home/michal/Pobrane/googledrive backup ― 29 may 2016/Politechnika/Studia doktorskie/Sem. IV/WHM/Projekt/Etap III/WHM-Problem-PB7/przykladowyGrafWazony.txt"
+        sciezkaPliku = askopenfilename()   # pokaż okienko wyboru pliku i zwróć wybraną ścieżkę
         
         with open(sciezkaPliku) as plikZGrafemWazonym:
             self.liczbaLewychWierzcholkow = int(plikZGrafemWazonym.readline())
@@ -161,22 +157,7 @@ class grafWazony:
             # numerPorzadkowy to liczba naturalna większa od 0
             self.numerPorzadkowy = _numerPorzadkowy   # numer porządkowy wierzchołka
             self.wagi = _listaWag                     # lista wag wszystkich krawędzi 
-        
-        
-#        def getNumerPorzadkowy(self):
-#            "Zwraca numer porządkowy wierzchołka."
-#            
-#        def getWaga(self, numerWagi):
-#            "Zwraca numer n-tej wagi wierzchołka lub zwraca błąd, że wagi nie ma."
-#            
-#        def getWagi(self):
-#            "Zwraca listę wag wierzchołka."
-#            return __wagi
-#            
-#        def setWaga(self, numerWagi, waga):
-#            "Ustawia n-tą wage wierzchołka, lub zwraca błąd jeśli wskaźnik na wagę wykracza poza listę wag."
-#            _wagi[numerWagi] = waga
-            
+
             
 class rozwiazanyGrafWazony(grafWazony):
     
@@ -205,7 +186,7 @@ class rozwiazanyGrafWazony(grafWazony):
     * obliczKosztRozwiazania(self) ― Oblicza koszt obecnego rozwiązania
     """
         
-    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = "nie"):
+    def __init__(self, liczbaWierzcholkow = 40, wczytacPlik = False):
         # konstruktor rozwiązanego problemu przydziału w grafie  
         # o podanej liczbie wierzchołków i wagach pobranych z pliku lub wygenerowanych losowo
         self.wierzcholkiLewe = []       # lista wszystkich wierzchołków lewego podgrafu
@@ -219,7 +200,7 @@ class rozwiazanyGrafWazony(grafWazony):
         else:
             raise IndexError, "Liczba wierzchołków musi być parzysta, a podałeś " + str(liczbaWierzcholkow)
             
-        if wczytacPlik == "nie":
+        if wczytacPlik == False:
             self._generujGrafWazony()
         else:
             self._wczytajGrafZPliku()
